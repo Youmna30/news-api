@@ -6,8 +6,10 @@ const uploads = require('../multer/multer-image')
 
 router.post('/news',auth,uploads.single('image'),async(req,res)=>{
     try{
-        console.log(req.file.buffer);
-        req.body.image = req.file.buffer
+        if(req.file != undefined){
+            req.body.image = req.file.buffer
+
+        }
         req.body.reporter = req.reporter._id
         const news = new News(req.body)
         await news.save()

@@ -7,9 +7,10 @@ const uploads = require('../multer/multer-image')
 router.post('/reporter',uploads.single('avatar'),async(req,res)=>{
    
     try{
-        console.log(req.file);
+        if(req.file != undefined){
+            req.body.avatar = req.file.buffer
 
-        req.body.avatar = req.file.buffer
+        }
         const reporter = new Reporter(req.body)
         const token = await reporter.generateToken()
         await reporter.save()
@@ -28,7 +29,7 @@ router.post('/reporter/login',async(req,res)=>{
         res.status(200).send({reporter,token})
     }
     catch(e){
-        res.status(400).send('Error'+e)
+        res.status(400).send(e)
     }
 })
 
@@ -76,7 +77,7 @@ router.patch('/reporter/:id',auth,async(req,res)=>{
         res.status(200).send(reporter)
     }
 catch(e){
-    res.status(400).send('error'+e)
+    res.status(400).send(e)
 }
 })
 
